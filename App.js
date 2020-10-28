@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import fetch from "node-fetch";
 
 const HEATMAPOINTS = [
   { latitude: 49.986111, longitude: 20.061667, weight: 1 },
@@ -62,7 +63,10 @@ function Splash({ navigation }) {
       {/* <Text>Splash page</Text> */}
       <Icon.Button
     name="facebook"
-    backgroundColor="#3b5998">
+    backgroundColor="#3b5998"
+    onPress={() => {
+      console.log('clicked')
+      fetch("http://192.168.0.12:5001/facebooklogin")}}>
     Login with Facebook
       </Icon.Button>
     </View>

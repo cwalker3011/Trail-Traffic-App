@@ -1,27 +1,14 @@
-const express = require('express');
-const PORT = 5001;
-const app = express();
-const apiRouter = require('./routers/apiRouter');
 const passport = require('passport');
-const { facebook_app_secret } = require('../secrets');
-const FacebookStrategy = require('passport-facebook').Strategy;
-const secret = require('../secrets');
+const GoogleStrategy = require('passport-google-oauth20');
+const FacebookStrategy = require('passport-facebook');
+const secret = require('../../secrets');
 
-app.use('/api', apiRouter, (req, res) => {
-  console.log(res.locals.data);
-  res.status(200).send(res.locals.data);
-})
-
-//initialize passport
-app.use(passport.initialize());
-
-//facebook strategy
 passport.use(
   new FacebookStrategy({
     // options for the google strategy
     clientID: secret.facebook_app_id,
     clientSecret: secret.facebook_app_secret,
-    callbackURL: '/facebooklogin/callback',
+    callbackURL: '/auth/facebook/redirect',
     profileFields: ['id', 'displayName'],
   },
   (accessToken, refreshToken, profile, done) => {
@@ -46,26 +33,5 @@ passport.use(
     //   })
     //   .catch(err => console.log(err));
     }
+    
 ));
-
-//facebook login route
-app.get('/facebooklogin', passport.authenticate('facebook', {session: false}));
-
-//facebook callback
-app.get('/facebooklogin/callback', passport.authenticate('facebook', {session: false}), (req, res) => {
-  res.sendStatus(200);
-})
-
-app.use((err, req, res, next) => {
-  let defaultErr = {
-    log: 'Express error handler caught unknown middleware error',
-    status: 400,
-    message: { err: 'An error occurred' },
-  };
-
-  let errorObj = Object.assign(defaultErr, err);
-  console.log(errorObj.log);
-  return res.status(errorObj.status).send(errorObj.message);
-});
-
-app.listen(PORT, () => console.log(`🚀 Listening on PORT ${PORT}`));
