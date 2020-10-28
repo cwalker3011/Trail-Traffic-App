@@ -1,7 +1,7 @@
 const express = require('express');
 const PORT = 5001;
 const app = express();
-const apiRouter = require('./apiRouter');
+const apiRouter = require('./routers/apiRouter');
 
 app.use('/api', apiRouter, (req, res) => {
   console.log(res.locals.data);
